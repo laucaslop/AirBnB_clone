@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 """ Import the modules need it for this storage """
-
 import json
-import models.base_model import BaseModel
+from models.base_model import BaseModel
+#from models.user import User
+#from models.place import Place
+#from models.state import State
+#from models.city import City
+#from models.amenity import Amenity
+#from models.review import Review
 """Future models to import in the project"""
-import models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from moels.amenity import Amenity
-from models.review import review
 
 
 class FileStorage:
@@ -34,5 +33,18 @@ class FileStorage:
         for key, value in FileStorage.__objects.items():
             new_dict[key] = value.to_dict()
 
-        with open(FileStorage.__file_path, 'w', encoding="utf-8")
-        data = json.dumps(new_dict)
+        with open(FileStorage.__file_path, 'w', encoding="utf-8") as file:
+            data = json.dumps(new_dict)
+            file.write(data)
+
+    def reload(self):
+        """ Public instance that deserializes JSON to object """
+        try:
+            with open(FileStorage.__file_path, 'r', encoding="UTF-8") as file:
+                list_data = json.load(file)
+                for key, value in list_data.items():
+                    FileStorage.__objects[key] = eval(
+                        value['__class__'])(**value)
+                    # State(**vale)
+        except Exception:
+            pass
