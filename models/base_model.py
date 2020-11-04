@@ -1,25 +1,26 @@
 #!/usr/bin/pyhton3
 """Let's import the modules"""
 import uuid
-from datetime import datetime
+import datetime
 import models
 format = '%Y-%m-%dT%H:%M:%S.%f'
+
 
 class BaseModel():
     """class defines all common attributes/methods"""
 
     def __init__(self, *args, **kwargs):
-        '''inicialization Base
+        """inicialization Base
         *args won’t be used
         if kwargs is not empty:
         each key of this dictionary is an attribute name
         each value of this dictionary is the value of this attribute name
-        '''
+        """
         if kwargs:
             for key, value in kwargs.items():
-                if key == 'created_at' or key == 'updated_at':
+                if key == "created_at" or key == "updated_at":
                     setattr(self, key, datetime.strptime(value, format))
-                elif key == '__class__':
+                elif key == "__class__":
                     pass
                 else:
                     setattr(self, key, value)
@@ -30,21 +31,24 @@ class BaseModel():
             models.storage.new(self)
 
     def __str__(self):
-        '''human readable'''
+        """human readable, return a string with the atributes
+        of the instance
+        """
         return "[{}] ({}) {}".format(type(self).__name__,
                                      self.id, self.__dict__)
 
     def save(self):
-        '''updates the public instance attribute
-        updated_at with the current datetime'''
+        """updates the public instance attribute
+        updated_at with the current datetime
+        """
         self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
-        '''
+        """
         creates dictionary of the class  and returns
         a dictionary of all the key values in __dict__
-        '''
+        """
         dic2 = self.__dict__.copy()
         dic2["created_at"] = dic2["created_at"].isoformat()
         dic2["updated_at"] = dic2["updated_at"].isoformat()
