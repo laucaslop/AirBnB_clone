@@ -11,7 +11,8 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
-#import aux_functions
+import aux_functions
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -51,48 +52,89 @@ class HBNBCommand(cmd.Cmd):
             new_instance.save()
 
     def do_show(self, args):
-        """ show an instance.
-        Usage:
-        1 - show <class> <id>
-        2 - <class name>.show("<id>")
-        """
-        commands = args.split()
-        if len(commands) < 1:
-            print("** class name missing **")
-        elif commands[0] not in self. classes_list:
-            print("** class doesn't exist **")
-        elif len(commands) < 2:
-            print("** instance id missing **")
+        '''Print the object with id specified and his dictionary'''
+        if not args:
+            print('** class name missing **')
         else:
-            key_validation = "{}.{}".format(commands[0], commands[1])
-            if key_validation not in storage.all():
-                print("** no instance found **")
+            s = ""
+            for i in args:
+                s += i
+            data = s.split()
+            if data[0] not in self.classes_list:
+                print("** class doesn't exist **")
             else:
-                for key, obj in storage.all().item():
-                    if key == key_validation:
-                        print(obj)
+                all_objs = storage.all()
+                if len(data) < 2:
+                    print("** instance id missing **")
+                else:
+                    if (data[0] + "." + data[1]) in all_objs:
+                        print(storage.all()[data[0] + "." + data[1]])
+                    else:
+                        print("** no instance found **")
 
     def do_destroy(self, args):
         """ Destroy an instance.
-        Usage:
+        Usage 🛠:
         1 - destroy <class> <id>
         2 - <class name>.destroy("<id>")
         """
         commands = args.split()
         if len(commands) < 1:
             print("** class name missing **")
-        elif commands[0] not in self. classes_list:
+        elif commands[0] not in self.classes_list:
             print("** class doesn't exist **")
-        elif command < 2:
+        elif len(commands) < 2:
             print("** instance id missing **")
         else:
-            key_validation = "{}.{}".format(commands[0], commands[1])
+            key_to_validate = "{}.{}".format(commands[0], commands[1])
             instances = storage.all()
             if key_to_validate not in instances:
                 print("** no instance found **")
             else:
                 del instances[key_to_validate]
                 storage.save()
+
+    def do_update(self, args):
+        """update an instance.
+        Usage 🛠:
+        1 - update <class name> <id> <attribute name> "<attribute value>
+        2 - <class name>.update(<id>, <attribute name>, <attribute value>)
+        3 - <class name>.update(<id>, <dictionary representation>)
+        """
+        if len(args) < 1:
+            print("** class name missing **")
+        else:
+            comds = args.split()
+            if comds[0] not in self.classes_list:
+                print("** class doesn't exist **")
+            elif len(comds) < 2:
+                print('** instance id missing **')
+            else:
+                instances = storage.all()
+                key = "{}.{}".format(comds[0], comds[1])
+                if key not in instances:
+                    print("** no instance found **")
+                if len(comds) < 3:
+                    print("** attribute name missing **")
+                elif len(comds) < 4:
+                    print("** value missing **")
+                else:
+                    for key_id, obj in instances.items():
+                        if key == key_id:
+                            value = comds[3].split("\"")
+                            # (i.e) evalue if value turns into list 🔐
+                            if len(value) > 1:
+                                value = value[1]
+                            else:
+                                value = comds[3]
+                            if hasattr(obj, comds[2]):
+                                value = type(
+                                    getattr(obj, comds[2]))(value)
+                                #  (i.e) int(comds[3]) 🔐
+                            elif value.isdigit() is True:
+                                value = int(value)
+                            setattr(obj, comds[2], value)
+                            storage.all()[key_id].save()
 
     def do_all(self, args):
         """ Print all instances.
