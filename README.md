@@ -13,3 +13,21 @@ This interpreter is capable of doing operations such as:
 - Do operations on objects (count, compute stats, etc…)
 - Update attributes of an object
 - Destroy an object
+
+### Getting started 👩🏽‍💻
+
+At first, you have to clone the repository in your machine
+
+```
+$ git clone git@github.com:Andres802/AirBnB_clone.git
+```
+
+Go inside to the directory
+``` 
+$ cd AirBnB_clone
+```
+Execute the console
+```
+./console.py
+```
+
