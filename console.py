@@ -4,14 +4,15 @@
 """
 import cmd
 from models.base_model import BaseModel
-#from models import storage
-#from models.user import User
+from models import storage
+from models.user import User
 #from models.state import State
 #from models.city import City
 #from models.place import Place
 #from models.amenity import Amenity
 #from models.review import Review
 #import aux_functions
+
 
 class HBNBCommand(cmd.Cmd):
     """ Command line main module """
@@ -21,10 +22,11 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, args):
         """Quit coomand line
-        Usage: 1 - quit 
+        Usage:
+        1 - quit
         """
         return True
- 
+
     def emptyline(self):
         " Empty Line "
         pass
@@ -34,6 +36,124 @@ class HBNBCommand(cmd.Cmd):
         print("")
         return True
 
+    def do_create(self, args):
+        """ Create a new instance
+        Usage:
+        1 - create <class name>
+        """
+        if len(args) < 1:
+            print("** class name missing **")
+        elif args not in self.classes_list:
+            print("** class doesn't exist **")
+        else:
+            new_instance = eval(args)()
+            print(new_instance.id)
+            new_instance.save()
+
+    def do_show(self, args):
+        """ show an instance.
+        Usage:
+        1 - show <class> <id>
+        2 - <class name>.show("<id>")
+        """
+        commands = args.split()
+        if len(commands) < 1:
+            print("** class name missing **")
+        elif commands[0] not in self. classes_list:
+            print("** class doesn't exist **")
+        elif len(commands) < 2:
+            print("** instance id missing **")
+        else:
+            key_validation = "{}.{}".format(commands[0], commands[1])
+            if key_validation not in storage.all():
+                print("** no instance found **")
+            else:
+                for key, obj in storage.all().item():
+                    if key == key_validation:
+                        print(obj)
+
+    def do_destroy(self, args):
+        """ Destroy an instance.
+        Usage:
+        1 - destroy <class> <id>
+        2 - <class name>.destroy("<id>")
+        """
+        commands = args.split()
+        if len(commands) < 1:
+            print("** class name missing **")
+        elif commands[0] not in self. classes_list:
+            print("** class doesn't exist **")
+        elif command < 2:
+            print("** instance id missing **")
+        else:
+            key_validation = "{}.{}".format(commands[0], commands[1])
+            instances = storage.all()
+            if key_to_validate not in instances:
+                print("** no instance found **")
+            else:
+                del instances[key_to_validate]
+                storage.save()
+
+    def do_all(self, args):
+        """ Print all instances.
+        Usage:
+        1 - all <class name>
+        2 - all
+        3 - <class name>.all()
+        """
+        if args not in self.classes_list and len(args) > 0:
+            print("** class doesn't exist **")
+        else:
+            instances = storage.all()
+            list_instances = []
+            for key_id in instances.keys():
+                key = key_id.split('.')
+                if len(args) < 1:
+                    list_instances.append(str(instances[key_id]))
+                elif key[0] == args:
+                    list_instances.append(str(instances[key_id]))
+            print(list_instances)
+
+    def do_update(self, args):
+        """update an instance.
+        Usage 🛠:
+        1 - update <class name> <id> <attribute name> "<attribute value>
+        2 - <class name>.update(<id>, <attribute name>, <attribute value>)
+        3 - <class name>.update(<id>, <dictionary representation>)
+        """
+        if len(args) < 1:
+            print("** class name missing **")
+        else:
+            commands = args.split()
+            if commands[0] not in self.classes_list:
+                print("** class doesn't exist **")
+            elif len(commands) < 2:
+                print('** instance id missing **')
+            else:
+                instances = storage.all()
+                key = "{}.{}".format(commands[0], commands[1])
+                if key not in instances:
+                    print("** no instance found **")
+                if len(commands) < 3:
+                    print("** attribute name missing **")
+                elif len(commands) < 4:
+                    print("** value missing **")
+                else:
+                    for key_id, obj in instances.items():
+                        if key == key_id:
+                            value = commands[3].split("\"")
+                            # (i.e) evalue if value turns into list                            if len(value) > 1:
+                                value = value[1]
+                            else:
+                                value = commands[3]
+                            if hasattr(obj, commands[2]):
+                                value = type(
+                                    getattr(obj, commands[2]))(value)
+                                #  (i.e) int(commands[3])
+                            elif value.isdigit() is True:
+                                value = int(value)
+                            setattr(obj, commands[2], value)
+                            storage.all()[key_id].save()
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
