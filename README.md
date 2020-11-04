@@ -34,3 +34,16 @@ Execute the console
 ### Working 👩🏽‍🔧
 
 Interactive mode
+```
+$ ./console.py
+
+(hbnb) help
+
+Documented commands (type help <topic>):
+========================================
+EOF  all  count  create  destroy  help  quit  show  update
+
+(hbnb)
+(hbnb) quit
+$
+```
