@@ -70,3 +70,5 @@ EOF  help  quit
 (hbnb) 
 $
 ```
+
+## Authors 🙋🏼‍♂️
