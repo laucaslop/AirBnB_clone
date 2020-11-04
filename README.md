@@ -31,3 +31,6 @@ Execute the console
 ./console.py
 ```
 
+### Working 👩🏽‍🔧
+
+Interactive mode
