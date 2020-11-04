@@ -63,3 +63,10 @@ help
 $
 $ cat test_help | ./console.py
 (hbnb)
+
+Documented commands (type help <topic>):
+========================================
+EOF  help  quit
+(hbnb) 
+$
+```
