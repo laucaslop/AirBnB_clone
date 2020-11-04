@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 import models
-
+format = '%Y-%m-%dT%H:%M:%S.%f'
 
 class BaseModel():
     """class defines all common attributes/methods"""
