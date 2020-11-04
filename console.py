@@ -6,11 +6,11 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
-#from models.state import State
-#from models.city import City
-#from models.place import Place
-#from models.amenity import Amenity
-#from models.review import Review
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 #import aux_functions
 
 
@@ -113,47 +113,6 @@ class HBNBCommand(cmd.Cmd):
                 elif key[0] == args:
                     list_instances.append(str(instances[key_id]))
             print(list_instances)
-
-    def do_update(self, args):
-        """update an instance.
-        Usage 🛠:
-        1 - update <class name> <id> <attribute name> "<attribute value>
-        2 - <class name>.update(<id>, <attribute name>, <attribute value>)
-        3 - <class name>.update(<id>, <dictionary representation>)
-        """
-        if len(args) < 1:
-            print("** class name missing **")
-        else:
-            commands = args.split()
-            if commands[0] not in self.classes_list:
-                print("** class doesn't exist **")
-            elif len(commands) < 2:
-                print('** instance id missing **')
-            else:
-                instances = storage.all()
-                key = "{}.{}".format(commands[0], commands[1])
-                if key not in instances:
-                    print("** no instance found **")
-                if len(commands) < 3:
-                    print("** attribute name missing **")
-                elif len(commands) < 4:
-                    print("** value missing **")
-                else:
-                    for key_id, obj in instances.items():
-                        if key == key_id:
-                            value = commands[3].split("\"")
-                            # (i.e) evalue if value turns into list                            if len(value) > 1:
-                                value = value[1]
-                            else:
-                                value = commands[3]
-                            if hasattr(obj, commands[2]):
-                                value = type(
-                                    getattr(obj, commands[2]))(value)
-                                #  (i.e) int(commands[3])
-                            elif value.isdigit() is True:
-                                value = int(value)
-                            setattr(obj, commands[2], value)
-                            storage.all()[key_id].save()
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
